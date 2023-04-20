@@ -1,14 +1,10 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../pages/api/auth/[...nextauth]";
 import Layout from "@/components/Layout";
-export default function Root() {
-  return (
-    <>
-      <Layout>
-        <h1>Hello</h1>
-      </Layout>
-    </>
-  );
+import React from "react";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { getServerSession } from "next-auth";
+
+export default function Favourite() {
+  return <Layout>favourite</Layout>;
 }
 
 export async function getServerSideProps(context) {
