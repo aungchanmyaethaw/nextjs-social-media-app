@@ -2,7 +2,12 @@ import { getCurrentDate } from "@/utils/getCurrentDate";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaGlobeAsia } from "react-icons/fa";
 import PostImageContainer from "./PostImageContainer";
-const PostCard = ({ post }) => {
+const PostCard = ({
+  post,
+  setModalImages,
+  setImageModalStatus,
+  setModalStart,
+}) => {
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
   const [captionDetails, setCaptionDetails] = useState(false);
 
@@ -40,7 +45,14 @@ const PostCard = ({ post }) => {
       </div>
       {post.images.length > 0 && imageContainerAvailable ? (
         <div className="mb-6">
-          {<PostImageContainer images={post.images} />}
+          {
+            <PostImageContainer
+              images={post.images}
+              setImageModalStatus={setImageModalStatus}
+              setModalImages={setModalImages}
+              setModalStart={setModalStart}
+            />
+          }
         </div>
       ) : null}
       {post.caption.length < 100 ? (
