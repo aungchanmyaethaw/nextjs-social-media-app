@@ -1,15 +1,19 @@
 import Layout from "@/components/Layout";
 import { getServerSession } from "next-auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useAddPost } from "@/hooks/usePosts";
 import { BsImage, BsTrashFill } from "react-icons/bs";
+import ImageContainer from "@/components/ImageContainer";
+import { ClipLoader } from "react-spinners";
+import { useRouter } from "next/router";
 export default function Create() {
-  const { register, handleSubmit, watch, setValue } = useForm();
+  const { register, handleSubmit, watch, setValue, reset } = useForm();
+  const router = useRouter();
   const { data: session } = useSession();
-  const imageWatch = watch("image");
+  const imageWatch = watch("images");
   const usePostMutation = useAddPost();
 
   const onSubmit = (data) => {
@@ -20,43 +24,53 @@ export default function Create() {
   const handleDrop = (event) => {
     event.preventDefault();
 
-    setValue("image", event.dataTransfer.files);
+    setValue("images", event.dataTransfer.files);
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
   };
 
-  const removeImage = () => {
-    setValue("image", []);
+  const removeImage = (index) => {
+    const filteredImages = Array.from(imageWatch).filter(
+      (_, currentIndex) => currentIndex !== index
+    );
+
+    setValue("images", filteredImages);
   };
+
+  useEffect(() => {
+    let timer;
+
+    reset();
+    if (usePostMutation.isSuccess) {
+      timer = setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [usePostMutation.isSuccess]);
 
   return (
     <Layout>
       <section className="max-w-md p-8 mx-auto mt-12 rounded-lg bg-dark-25 ">
         <h2 className="mb-8 text-2xl text-center text-white">Add a post</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-8"
+          encType="multipart/form-data"
+        >
           <div className="flex flex-col gap-4 text-white  w-full h-[20rem] relative  overflow-hidden">
             <input
               type="file"
-              {...register("image")}
-              className="hidden"
+              {...register("images")}
+              multiple
               id="image"
+              className="absolute top-0 right-0 hidden"
             />
             {imageWatch?.[0] ? (
-              <>
-                <img
-                  src={URL.createObjectURL(imageWatch?.[0])}
-                  alt="image"
-                  className="object-cover w-full h-full rounded-lg"
-                />
-                <button
-                  className="absolute z-50 flex items-center justify-center w-8 h-8 bg-red-200 rounded right-4 top-4"
-                  onClick={removeImage}
-                >
-                  <BsTrashFill className="text-red-600 " />
-                </button>
-              </>
+              <ImageContainer images={imageWatch} removeImage={removeImage} />
             ) : (
               <label
                 className="flex items-center justify-center w-full h-full border border-dashed rounded-lg bg-opacity-30 border-primary"
@@ -73,12 +87,13 @@ export default function Create() {
               </label>
             )}
           </div>
+
           <div className="flex flex-col gap-2 text-white">
-            <label htmlFor="image">
+            <label htmlFor="caption">
               Caption <span className="text-primary">*</span>{" "}
             </label>
             <textarea
-              type="text"
+              id="caption"
               {...register("caption", { required: true })}
               className="p-4 text-white rounded-lg resize-none bg-dark-75 focus:outline-none placeholder:text-gray-400 caret-primary"
               placeholder="Enter a caption ..."
@@ -98,8 +113,32 @@ export default function Create() {
               <option value={true}>Only me</option>
             </select>
           </div>
-          <button className="px-2 py-2 font-medium rounded bg-primary text-dark-100 hover:bg-yellow-400">
-            Add
+          {usePostMutation.isSuccess ? (
+            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+              <p className="text-lg font-medium text-center">
+                Upload Successful!
+              </p>
+            </div>
+          ) : null}
+          {usePostMutation.isError ? (
+            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+              <p className="text-lg font-medium text-center">
+                {usePostMutation.error.message}
+              </p>
+            </div>
+          ) : null}
+          <button
+            className="px-2 py-2 font-medium rounded bg-primary text-dark-100 hover:bg-yellow-400"
+            disabled={usePostMutation.isLoading}
+          >
+            {usePostMutation.isLoading ? (
+              <div className="flex items-center justify-center gap-2 ">
+                <ClipLoader color="black" size={14} />
+                <span>Uploading...</span>
+              </div>
+            ) : (
+              <span>Upload</span>
+            )}
           </button>
         </form>
       </section>
