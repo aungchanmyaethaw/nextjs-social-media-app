@@ -1,11 +1,14 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import Layout from "@/components/Layout";
-export default function Root() {
+import prisma from "@/lib/prisma";
+import { getPosts } from "@/lib/getServerData";
+import PostContainer from "@/components/PostContainer";
+export default function Root({ posts }) {
   return (
     <>
       <Layout>
-        <h1>Hello</h1>
+        <PostContainer posts={posts} />
       </Layout>
     </>
   );
@@ -13,6 +16,8 @@ export default function Root() {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  let posts = await getPosts(prisma);
+  posts = JSON.parse(JSON.stringify(posts));
 
   if (!session) {
     return {
@@ -23,6 +28,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { session },
+    props: { session, posts },
   };
 }

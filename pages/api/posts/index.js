@@ -18,11 +18,9 @@ const handler = nc({
     res.status(404).end("not found");
   },
 })
-  .use(upload.any())
+  .use(upload.array("images"))
   .post(async (req, res) => {
     const { caption, onlyMe, authorId } = req.body;
-
-    console.log(req.body);
 
     if (!caption) {
       return res.status(400).json({ msg: " caption is required!" });
@@ -32,12 +30,11 @@ const handler = nc({
       return res.status(400).json({ msg: "authorId is required!" });
     }
 
-    const result = await cloudinary.uploader.upload(req.files[0].path);
+    const uploader = async (path) => await cloudinary.uploader.upload(path);
 
-    await prisma.post.create({
+    const { id: postId } = await prisma.post.create({
       data: {
         caption: caption,
-        image: result.secure_url,
         onlyMe: JSON.parse(onlyMe),
         author: {
           connect: {
@@ -47,9 +44,28 @@ const handler = nc({
       },
     });
 
-    return res
-      .status(201)
-      .json({ data: { caption, image: result.secure_url, onlyMe } });
+    const imageUrls = [];
+    const imageFiles = req.files;
+
+    for (const file of imageFiles) {
+      const { path } = file;
+      const result = await uploader(path);
+      imageUrls.push(result.secure_url);
+    }
+
+    for (const url of imageUrls) {
+      await prisma.image.create({
+        data: {
+          url: url,
+          post: {
+            connect: {
+              id: postId,
+            },
+          },
+        },
+      });
+    }
+    return res.status(201).json({ msg: "success" });
   });
 
 export default handler;

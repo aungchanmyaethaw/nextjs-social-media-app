@@ -21,7 +21,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="relative flex items-center justify-between py-8">
+    <header className="sticky top-0 z-40 flex items-center justify-between py-8 border-b bg-dark-100 ">
       <div className="flex items-baseline gap-8">
         <Link href="/" className="text-2xl font-medium text-white">
           Chan
@@ -46,8 +46,8 @@ export default function Navbar() {
       >
         <img
           src={session?.user?.image}
-          alt={session?.user?.image}
-          className="w-8 h-8 rounded-full pointer-events-none"
+          alt={"profile"}
+          className="w-8 h-8 rounded-full pointer-events-none "
         />
         <span className="text-white pointer-events-none">
           {session?.user?.name}
