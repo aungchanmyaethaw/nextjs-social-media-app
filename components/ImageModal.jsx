@@ -14,11 +14,11 @@ const ImageModal = ({
 
   return (
     <div
-      className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-screen text-white cursor-pointer bg-opacity-95 bg-dark-100"
+      className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-screen text-white bg-opacity-95 bg-dark-100"
       onClick={handleClose}
     >
       <section
-        className=" max-w-4xl mx-auto h-[80vh] bg-gray-400 overflow-hidden rounded-lg cursor-grab"
+        className=" max-w-4xl w-full mx-auto h-[80vh] bg-gray-400 overflow-hidden rounded-lg cursor-grab"
         onClick={(e) => e.stopPropagation()}
       >
         <swiper-container

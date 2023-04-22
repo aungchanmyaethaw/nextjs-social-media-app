@@ -9,12 +9,15 @@ import {
   useGetLikesByPostId,
   useRemoveLike,
 } from "@/hooks/useFavourite";
+import { useGetComments } from "@/hooks/useComment";
 
 const PostCard = ({
   post,
   setModalImages,
   setImageModalStatus,
   setModalStart,
+  setCommentModalStatus,
+  setCommentPostId,
   isProfile = false,
 }) => {
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
@@ -23,6 +26,9 @@ const PostCard = ({
   const { data: session } = useSession();
 
   const { isLoading, data: likes, refetch } = useGetLikesByPostId(post?.id);
+  const { isLoading: commentLoading, data: comments } = useGetComments(
+    post?.id
+  );
   const useAddLikeMutation = useAddLike();
   const useRemoveMutation = useRemoveLike();
 
@@ -60,8 +66,42 @@ const PostCard = ({
     useRemoveMutation.mutate({ postId: post.id, likeId: isLiked.id });
   };
 
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  const handleOpenCommentModal = () => {
+    setCommentModalStatus(true);
+    setCommentPostId(post?.id);
+  };
+
+  if (isLoading || commentLoading) {
+    return (
+      <article className="w-full p-4 rounded-lg bg-dark-25">
+        <div className="flex items-center gap-2 mb-6">
+          <img
+            src="./profile.png"
+            className="w-10 h-10 bg-gray-400 bg-opacity-50 rounded-full pointer-events-none"
+            referrerpolicy="no-referrer"
+          />
+          <div className="space-y-1">
+            <span className="w-[10rem] h-2 bg-gray-400 bg-opacity-50 block" />
+            <div className="flex items-center gap-1">
+              <FaGlobeAsia size={14} className="text-gray-400" />
+
+              <span className="w-[5rem] h-2 bg-gray-400 bg-opacity-50 block" />
+            </div>
+          </div>
+        </div>
+        <div className="mb-6 w-full h-[30rem] bg-gray-400 bg-opacity-50 rounded-lg" />
+        <div className="block w-full h-3 mb-3 bg-gray-400 bg-opacity-50" />
+        <div className="block w-3/4 h-3 bg-gray-400 bg-opacity-50" />
+        <div className="flex py-2 mt-4 border-t border-t-gray-400">
+          <div className="flex justify-center basis-1/2">
+            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-50" />
+          </div>
+          <div className="flex justify-center basis-1/2">
+            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-50" />
+          </div>
+        </div>
+      </article>
+    );
   }
 
   return (
@@ -149,9 +189,12 @@ const PostCard = ({
           </button>
         )}
 
-        <button className="flex items-center justify-center gap-2 py-1 basis-1/2 hover:bg-gray-400 hover:bg-opacity-10">
+        <button
+          className="flex items-center justify-center gap-2 py-1 basis-1/2 hover:bg-gray-400 hover:bg-opacity-10"
+          onClick={handleOpenCommentModal}
+        >
           <BsChat className="text-lg text-gray-400" />
-          <span className="font-medium text-gray-400">100</span>
+          <span className="font-medium text-gray-400">{comments?.length}</span>
         </button>
       </div>
     </article>

@@ -20,6 +20,7 @@ model User {
   sessions Session[]
   posts Post[]
   favourites Favourite[]
+  comments Comment[]
 
 }
 
@@ -33,7 +34,8 @@ model Post{
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   favourites Favourite[] 
-  images Image[] 
+  images Image[]
+  comments Comment[] 
 
 }
 
@@ -58,6 +60,17 @@ user User @relation(fields: [userId],references: [id],onDelete: Cascade)
 createdAt     DateTime  @default(now())
 updatedAt     DateTime  @updatedAt 
 
+}
+
+model Comment{
+ id String @id @default(cuid())
+ comment String
+  postId String
+post Post @relation(fields: [postId],references: [id],onDelete: Cascade)
+userId String
+user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+createdAt     DateTime  @default(now())
+updatedAt     DateTime  @updatedAt 
 }
 
 model Account {
