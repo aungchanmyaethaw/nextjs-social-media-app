@@ -2,20 +2,67 @@ import { getCurrentDate } from "@/utils/getCurrentDate";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaGlobeAsia } from "react-icons/fa";
 import PostImageContainer from "./PostImageContainer";
+import { useSession } from "next-auth/react";
+import { BsHeart, BsHeartFill, BsChat } from "react-icons/bs";
+import {
+  useAddLike,
+  useGetLikesByPostId,
+  useRemoveLike,
+} from "@/hooks/useFavourite";
+
 const PostCard = ({
   post,
   setModalImages,
   setImageModalStatus,
   setModalStart,
+  isProfile = false,
 }) => {
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
   const [captionDetails, setCaptionDetails] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const { data: session } = useSession();
+
+  const { isLoading, data: likes, refetch } = useGetLikesByPostId(post?.id);
+  const useAddLikeMutation = useAddLike();
+  const useRemoveMutation = useRemoveLike();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setImageContainerAvailable(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (useAddLikeMutation.isSuccess || useRemoveMutation.isSuccess) {
+      refetch();
+    }
+  }, [useAddLikeMutation.isSuccess, useRemoveMutation.isSuccess]);
+
+  useEffect(() => {
+    if (!isLoading && session) {
+      const isLiked = likes.find((like) => like.user.id === session.user.id);
+
+      if (isLiked) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
+    }
+  }, [likes, isLoading, session]);
+
+  const addLike = () => {
+    useAddLikeMutation.mutate({ userId: session?.user.id, postId: post?.id });
+  };
+
+  const removeLike = () => {
+    const isLiked = likes.find((like) => like.user.id === session.user.id);
+
+    useRemoveMutation.mutate({ postId: post.id, likeId: isLiked.id });
+  };
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <article className="w-full p-4 rounded-lg bg-dark-25">
@@ -42,6 +89,11 @@ const PostCard = ({
             ) : null}
           </div>
         </div>
+        {session?.user?.id === post.authorId ? (
+          <div className="flex self-start justify-center px-2 py-1 mt-1 text-xs font-bold rounded-2xl bg-primary">
+            me
+          </div>
+        ) : null}
       </div>
       {post.images.length > 0 && imageContainerAvailable ? (
         <div className="mb-6">
@@ -78,6 +130,30 @@ const PostCard = ({
           </button>
         </p>
       )}
+      <div className="flex py-2 mt-4 border-t border-t-gray-400">
+        {isLiked ? (
+          <button
+            className="flex items-center justify-center gap-2 py-1 rounded basis-1/2 hover:bg-gray-400 hover:bg-opacity-10"
+            onClick={removeLike}
+          >
+            <BsHeartFill className="text-lg text-primary" />
+            <span className="font-medium text-gray-400">{likes?.length}</span>
+          </button>
+        ) : (
+          <button
+            className="flex items-center justify-center gap-2 py-1 rounded basis-1/2 hover:bg-gray-400 hover:bg-opacity-10"
+            onClick={addLike}
+          >
+            <BsHeart className="text-lg text-gray-400" />
+            <span className="font-medium text-gray-400">{likes?.length}</span>
+          </button>
+        )}
+
+        <button className="flex items-center justify-center gap-2 py-1 basis-1/2 hover:bg-gray-400 hover:bg-opacity-10">
+          <BsChat className="text-lg text-gray-400" />
+          <span className="font-medium text-gray-400">100</span>
+        </button>
+      </div>
     </article>
   );
 };
