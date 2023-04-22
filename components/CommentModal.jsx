@@ -74,7 +74,11 @@ const CommentModal = ({ setCommentModalStatus, commentPostId }) => {
             </>
           ) : comments.length > 0 ? (
             comments.map((comment) => (
-              <CommentCard key={comment.id} comment={comment} />
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                refetch={refetch}
+              />
             ))
           ) : (
             <div className="flex flex-col items-center justify-center w-full gap-2 py-24">

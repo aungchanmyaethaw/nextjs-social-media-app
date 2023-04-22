@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import Layout from "@/components/Layout";
 import prisma from "@/lib/prisma";
-import { getPosts } from "@/lib/getServerData";
+import { getPosts } from "@/lib/post";
 import PostContainer from "@/components/PostContainer";
 export default function Root({ posts }) {
   return (

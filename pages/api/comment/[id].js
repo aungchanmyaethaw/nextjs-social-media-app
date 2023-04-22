@@ -10,6 +10,7 @@ export default async function handler(req, res) {
       },
       include: {
         user: true,
+        post: true,
       },
     });
 
@@ -36,6 +37,33 @@ export default async function handler(req, res) {
     });
 
     return res.status(201).json({ msg: "hello" });
+  }
+
+  if (req.method === "POST" && req.body.commentId) {
+    const { commentId } = req.body;
+
+    await prisma.comment.delete({
+      where: {
+        id: commentId,
+      },
+    });
+
+    return res.status(201).json({ msg: "delete comment" });
+  }
+
+  if (req.method === "PATCH") {
+    const { comment, commentId } = req.body;
+
+    await prisma.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        comment,
+      },
+    });
+
+    return res.status(201).json({ msg: " comment updated!" });
   }
 
   return res.status(501).json({ msg: "Something Broke!" });

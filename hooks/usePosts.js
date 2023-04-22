@@ -1,5 +1,5 @@
-import { addPost } from "@/lib/addPost";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { addPost } from "@/lib/post";
+import { useMutation } from "@tanstack/react-query";
 
 export const useAddPost = () => {
   return useMutation(addPost);

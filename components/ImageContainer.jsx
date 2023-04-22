@@ -5,7 +5,10 @@ register();
 
 export default function ImageContainer({ images, removeImage }) {
   return (
-    <section className="w-full h-full overflow-hidden rounded-lg cursor-grab">
+    <label
+      htmlFor="image"
+      className="w-full h-full overflow-hidden rounded-lg cursor-pointer"
+    >
       <swiper-container slides-per-view="1" navigation="true">
         {Array.from(images).map((image, index) => (
           <swiper-slide key={`${index}-${image.name}`}>
@@ -24,6 +27,6 @@ export default function ImageContainer({ images, removeImage }) {
           </swiper-slide>
         ))}
       </swiper-container>
-    </section>
+    </label>
   );
 }

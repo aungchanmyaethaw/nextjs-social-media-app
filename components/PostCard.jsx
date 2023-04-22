@@ -78,7 +78,6 @@ const PostCard = ({
           <img
             src="./profile.png"
             className="w-10 h-10 bg-gray-400 bg-opacity-50 rounded-full pointer-events-none"
-            referrerpolicy="no-referrer"
           />
           <div className="space-y-1">
             <span className="w-[10rem] h-2 bg-gray-400 bg-opacity-50 block" />
