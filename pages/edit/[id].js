@@ -1,22 +1,45 @@
 import Layout from "@/components/Layout";
 import { getServerSession } from "next-auth";
-import React, { useEffect } from "react";
-import { authOptions } from "./api/auth/[...nextauth]";
+import React, { useEffect, useState } from "react";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { useForm } from "react-hook-form";
-import { useAddPost } from "@/hooks/usePosts";
+import { useSession } from "next-auth/react";
+import {
+  useAddPost,
+  useDeleteImage,
+  useEditPost,
+  useEditPostImageUpload,
+} from "@/hooks/usePosts";
 import { BsImage, BsTrashFill } from "react-icons/bs";
 import ImageContainer from "@/components/ImageContainer";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/router";
-export default function Create({ session }) {
+import prisma from "@/lib/prisma";
+import { getPost } from "@/lib/post";
+
+const EditPost = ({ session, post }) => {
   const { register, handleSubmit, watch, setValue, reset } = useForm();
+  const [allImages, setAllImages] = useState([]);
+  const [deleteImageId, setDeletImageId] = useState("");
+
   const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
+  const useEditPostMutation = useEditPost();
+  const useImageUploadMutation = useEditPostImageUpload();
+  const useImageDeleteMuatation = useDeleteImage();
+
   const imageWatch = watch("images");
-  const usePostMutation = useAddPost();
 
   const onSubmit = (data) => {
-    const tempData = { ...data, id: session.user.id };
-    usePostMutation.mutate(tempData);
+    useEditPostMutation.mutate({
+      postId: post.id,
+      caption: data.caption,
+      onlyMe: data.onlyMe,
+    });
   };
 
   const handleDrop = (event) => {
@@ -29,30 +52,56 @@ export default function Create({ session }) {
     event.preventDefault();
   };
 
-  const removeImage = (index) => {
-    const filteredImages = Array.from(imageWatch).filter(
-      (_, currentIndex) => currentIndex !== index
-    );
-
-    setValue("images", filteredImages);
+  const removeImage = (imageId) => {
+    useImageDeleteMuatation.mutate(imageId);
   };
+
+  useEffect(() => {
+    if (useImageUploadMutation.isSuccess) {
+      refreshData();
+      setValue("images", []);
+    }
+  }, [useImageUploadMutation.isSuccess]);
+
+  useEffect(() => {
+    if (useImageDeleteMuatation.isSuccess) {
+      refreshData();
+      setAllImages((prev) => {
+        prev.map((image) => image?.id === deleteImageId);
+      });
+    }
+  }, [useImageDeleteMuatation.isSuccess]);
 
   useEffect(() => {
     let timer;
 
     reset();
-    if (usePostMutation.isSuccess) {
+    setAllImages();
+    if (useEditPostMutation.isSuccess) {
       timer = setTimeout(() => {
         router.push("/");
       }, 1000);
     }
     return () => clearTimeout(timer);
-  }, [usePostMutation.isSuccess]);
+  }, [useEditPostMutation.isSuccess]);
+
+  useEffect(() => {
+    setValue("caption", post.caption);
+    setValue("onlyMe", post.onlyMe);
+    setAllImages(post.images);
+  }, [setValue, post]);
+
+  useEffect(() => {
+    if (imageWatch?.length > 0) {
+      setAllImages((prev) => [...prev, ...imageWatch]);
+      useImageUploadMutation.mutate({ postId: post.id, images: imageWatch });
+    }
+  }, [imageWatch]);
 
   return (
     <Layout>
       <section className="max-w-md p-8 mx-auto mt-12 rounded-lg bg-dark-25 ">
-        <h2 className="mb-8 text-2xl text-center text-white">Add a post</h2>
+        <h2 className="mb-8 text-2xl text-center text-white">Edit post</h2>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -67,8 +116,12 @@ export default function Create({ session }) {
               id="image"
               className="absolute top-0 right-0 hidden"
             />
-            {imageWatch?.[0] ? (
-              <ImageContainer images={imageWatch} removeImage={removeImage} />
+            {allImages?.length > 0 ? (
+              <ImageContainer
+                images={allImages}
+                removeImage={removeImage}
+                setDeletImageId={setDeletImageId}
+              />
             ) : (
               <label
                 className="flex items-center justify-center w-full h-full border border-dashed rounded-lg bg-opacity-30 border-primary"
@@ -111,25 +164,42 @@ export default function Create({ session }) {
               <option value={true}>Only me</option>
             </select>
           </div>
-          {usePostMutation.isSuccess ? (
+          {useEditPostMutation.isSuccess || useImageUploadMutation.isLoading ? (
             <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 Upload Successful!
               </p>
             </div>
           ) : null}
-          {usePostMutation.isError ? (
+          {useImageUploadMutation.isLoading ? (
             <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
-                {usePostMutation.error.message}
+                Image Uploading...
               </p>
             </div>
           ) : null}
+          {useEditPostMutation.isError ? (
+            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+              <p className="text-lg font-medium text-center">
+                {useEditPostMutation.error.message}
+              </p>
+            </div>
+          ) : null}
+          {useImageDeleteMuatation.isLoading ? (
+            <div className="fixed py-4 bg-red-400 rounded bottom-8 right-8 w-[15rem]">
+              <p className="text-lg font-medium text-center">
+                Image Uploading...
+              </p>
+            </div>
+          ) : null}
+
           <button
             className="px-2 py-2 font-medium rounded bg-primary text-dark-100 hover:bg-yellow-400"
-            disabled={usePostMutation.isLoading}
+            disabled={
+              useEditPostMutation.isLoading || useImageUploadMutation.isLoading
+            }
           >
-            {usePostMutation.isLoading ? (
+            {useEditPostMutation.isLoading ? (
               <div className="flex items-center justify-center gap-2 ">
                 <ClipLoader color="black" size={14} />
                 <span>Uploading...</span>
@@ -142,10 +212,15 @@ export default function Create({ session }) {
       </section>
     </Layout>
   );
-}
+};
+
+export default EditPost;
 
 export async function getServerSideProps(context) {
+  const { id } = context.query;
   const session = await getServerSession(context.req, context.res, authOptions);
+  let post = await getPost(prisma, id);
+  post = JSON.parse(JSON.stringify(post));
 
   if (!session) {
     return {
@@ -156,6 +231,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: { session },
+    props: { session, post },
   };
 }

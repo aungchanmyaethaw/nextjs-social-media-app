@@ -4,11 +4,18 @@ import Layout from "@/components/Layout";
 import prisma from "@/lib/prisma";
 import { getPosts } from "@/lib/post";
 import PostContainer from "@/components/PostContainer";
+import { useRouter } from "next/router";
 export default function Root({ posts }) {
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   return (
     <>
       <Layout>
-        <PostContainer posts={posts} />
+        <PostContainer posts={posts} refreshData={refreshData} />
       </Layout>
     </>
   );

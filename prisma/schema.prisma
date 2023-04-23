@@ -35,7 +35,7 @@ model Post{
   updatedAt     DateTime  @updatedAt
   favourites Favourite[] 
   images Image[]
-  comments Comment[] 
+  comments Comment[]
 
 }
 

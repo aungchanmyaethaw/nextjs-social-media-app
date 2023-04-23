@@ -3,7 +3,16 @@ import { register } from "swiper/element/bundle";
 import { BsTrashFill } from "react-icons/bs";
 register();
 
-export default function ImageContainer({ images, removeImage }) {
+export default function ImageContainer({
+  images,
+  removeImage,
+  setDeletImageId,
+}) {
+  const handleDelete = (imageId) => {
+    setDeletImageId(imageId);
+    removeImage(imageId);
+  };
+
   return (
     <label
       htmlFor="image"
@@ -11,16 +20,27 @@ export default function ImageContainer({ images, removeImage }) {
     >
       <swiper-container slides-per-view="1" navigation="true">
         {Array.from(images).map((image, index) => (
-          <swiper-slide key={`${index}-${image.name}`}>
+          <swiper-slide key={image.id || `${index}-${image.name}`}>
             <div className="relative">
-              <button
-                className="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded right-2 top-2"
-                onClick={() => removeImage(index)}
-              >
-                <BsTrashFill className="text-red-600" />
-              </button>
+              {image.id ? (
+                <button
+                  className="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded right-2 top-2"
+                  onClick={() => handleDelete(image.id)}
+                  type="button"
+                >
+                  <BsTrashFill className="text-red-600" />
+                </button>
+              ) : (
+                <button
+                  className="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded right-2 top-2"
+                  onClick={() => removeImage(index)}
+                  type="button"
+                >
+                  <BsTrashFill className="text-red-600" />
+                </button>
+              )}
               <img
-                src={URL.createObjectURL(image)}
+                src={image.url || URL.createObjectURL(image)}
                 className="object-cover w-full h-[20rem] "
               />
             </div>

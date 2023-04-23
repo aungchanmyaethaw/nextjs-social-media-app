@@ -1,15 +1,24 @@
+import { useRef } from "react";
 import { getCurrentDate } from "@/utils/getCurrentDate";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaGlobeAsia } from "react-icons/fa";
 import PostImageContainer from "./PostImageContainer";
 import { useSession } from "next-auth/react";
-import { BsHeart, BsHeartFill, BsChat } from "react-icons/bs";
+import {
+  BsHeart,
+  BsHeartFill,
+  BsChat,
+  BsThreeDots,
+  BsFillTrashFill,
+  BsPencilSquare,
+} from "react-icons/bs";
 import {
   useAddLike,
   useGetLikesByPostId,
   useRemoveLike,
 } from "@/hooks/useFavourite";
 import { useGetComments } from "@/hooks/useComment";
+import Link from "next/link";
 
 const PostCard = ({
   post,
@@ -18,11 +27,14 @@ const PostCard = ({
   setModalStart,
   setCommentModalStatus,
   setCommentPostId,
+  setDeletePostId,
+  setDeleteModalStatus,
   isProfile = false,
 }) => {
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
   const [captionDetails, setCaptionDetails] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [optionsStatus, setOptionsStatus] = useState(false);
   const { data: session } = useSession();
 
   const { isLoading, data: likes, refetch } = useGetLikesByPostId(post?.id);
@@ -31,6 +43,23 @@ const PostCard = ({
   );
   const useAddLikeMutation = useAddLike();
   const useRemoveMutation = useRemoveLike();
+
+  const optionsRef = useRef();
+  const buttonRef = useRef();
+  useEffect(() => {
+    const event = document.addEventListener("click", (event) => {
+      if (event.target === buttonRef.current) {
+        setOptionsStatus(true);
+        return;
+      }
+
+      if (event.target !== optionsRef.current) {
+        setOptionsStatus(false);
+      }
+    });
+
+    return () => document.removeEventListener("click", event);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,6 +100,11 @@ const PostCard = ({
     setCommentPostId(post?.id);
   };
 
+  const handleOpenDeletePostModal = () => {
+    setDeletePostId(post?.id);
+    setDeleteModalStatus(true);
+  };
+
   if (isLoading || commentLoading) {
     return (
       <article className="w-full p-4 rounded-lg bg-dark-25">
@@ -105,34 +139,69 @@ const PostCard = ({
 
   return (
     <article className="w-full p-4 rounded-lg bg-dark-25">
-      <div className="flex items-center gap-2 mb-6">
-        <img
-          src={post?.author?.image}
-          alt={"profile"}
-          className="w-10 h-10 rounded-full pointer-events-none "
-        />
-        <div className="space-y-1">
-          <span className="text-white pointer-events-none">
-            {post?.author?.name}
-          </span>
-          <div className="flex items-center gap-1">
-            {post.onlyMe ? (
-              <FaLock size={14} className="text-gray-400" />
-            ) : (
-              <FaGlobeAsia size={14} className="text-gray-400" />
-            )}
-            {imageContainerAvailable ? (
-              <span className="text-xs text-gray-400 ">
-                {getCurrentDate(post.updatedAt)}
-              </span>
-            ) : null}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2 mb-6">
+          <img
+            src={post?.author?.image}
+            alt={"profile"}
+            className="w-10 h-10 rounded-full pointer-events-none "
+          />
+          <div className="space-y-1">
+            <span className="text-white pointer-events-none">
+              {post?.author?.name}
+            </span>
+            <div className="flex items-center gap-1">
+              {post.onlyMe ? (
+                <FaLock size={14} className="text-gray-400" />
+              ) : (
+                <FaGlobeAsia size={14} className="text-gray-400" />
+              )}
+              {imageContainerAvailable ? (
+                <span className="text-xs text-gray-400 ">
+                  {getCurrentDate(post.updatedAt)}
+                </span>
+              ) : null}
+            </div>
           </div>
+          {session?.user?.id === post.authorId ? (
+            <div className="flex self-start justify-center px-2 py-1 mt-1 text-xs font-bold rounded-2xl bg-primary">
+              me
+            </div>
+          ) : null}
         </div>
-        {session?.user?.id === post.authorId ? (
-          <div className="flex self-start justify-center px-2 py-1 mt-1 text-xs font-bold rounded-2xl bg-primary">
-            me
-          </div>
-        ) : null}
+        <div className="relative" ref={optionsRef}>
+          <button
+            className="p-2 text-xl text-white rounded-full hover:bg-gray-400 hover:bg-opacity-25"
+            onClick={() => {
+              setOptionsStatus(true);
+            }}
+            ref={buttonRef}
+          >
+            <BsThreeDots className="pointer-events-none" />
+          </button>
+          {optionsStatus ? (
+            <div className="absolute right-0 z-10 min-w-[10rem] p-4 shadow-sm rounded bg-dark-75 space-y-3">
+              {session?.user?.id === post.authorId ? (
+                <>
+                  <button
+                    className="flex items-center w-full gap-2 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
+                    onClick={handleOpenDeletePostModal}
+                  >
+                    <BsFillTrashFill />
+                    Delete post
+                  </button>
+                  <Link
+                    href={`/edit/${post?.id}`}
+                    className="flex items-center gap-2 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-25"
+                  >
+                    <BsPencilSquare />
+                    Edit post
+                  </Link>
+                </>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       </div>
       {post.images.length > 0 && imageContainerAvailable ? (
         <div className="mb-6">

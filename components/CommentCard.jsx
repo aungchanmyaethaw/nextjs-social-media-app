@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
-import { MdSend } from "react-icons/md";
 import { useDeleteComment, useEditComment } from "@/hooks/useComment";
 import { getCurrentDate } from "@/utils/getCurrentDate";
 import { useForm } from "react-hook-form";
