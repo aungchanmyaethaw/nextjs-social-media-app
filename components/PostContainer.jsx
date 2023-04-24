@@ -11,7 +11,10 @@ const PostContainer = ({ posts, refreshData }) => {
   const [modalImages, setModalImages] = useState([]);
   const [modalStart, setModalStart] = useState(0);
   const [deleteModalStatus, setDeleteModalStatus] = useState(false);
-  const [deletePostId, setDeletePostId] = useState("");
+  const [deletePostId, setDeletePostId] = useState({
+    postId: "",
+    imagePublicIds: [],
+  });
 
   useEffect(() => {
     if (imageModalStatus || commentModalStatus || deleteModalStatus) {

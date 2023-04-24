@@ -30,7 +30,7 @@ const ImageModal = ({
             <swiper-slide key={`${index}-${image.name}`}>
               <img
                 src={image.url}
-                className="object-cover w-full h-[80vh] block "
+                className="object-contain w-full h-[80vh] block "
               />
             </swiper-slide>
           ))}

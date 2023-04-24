@@ -11,7 +11,6 @@ cloudinary.config({
 
 const handler = nc({
   onError: (err, req, res, next) => {
-    console.error(err.stack);
     res.status(500).end("Something broke!");
   },
   onNoMatch: (req, res) => {
@@ -50,13 +49,14 @@ const handler = nc({
     for (const file of imageFiles) {
       const { path } = file;
       const result = await uploader(path);
-      imageUrls.push(result.secure_url);
+      imageUrls.push({ url: result.secure_url, publicId: result.public_id });
     }
 
     for (const url of imageUrls) {
       await prisma.image.create({
         data: {
-          url: url,
+          url: url.url,
+          publicId: url.publicId,
           post: {
             connect: {
               id: postId,

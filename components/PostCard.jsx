@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { getCurrentDate } from "@/utils/getCurrentDate";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaGlobeAsia } from "react-icons/fa";
+import { HiXMark } from "react-icons/hi2";
 import PostImageContainer from "./PostImageContainer";
 import { useSession } from "next-auth/react";
 import {
@@ -19,6 +20,7 @@ import {
 } from "@/hooks/useFavourite";
 import { useGetComments } from "@/hooks/useComment";
 import Link from "next/link";
+import { useAddHidePost, useRemoveHidePost } from "@/hooks/usePosts";
 
 const PostCard = ({
   post,
@@ -35,6 +37,8 @@ const PostCard = ({
   const [captionDetails, setCaptionDetails] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [optionsStatus, setOptionsStatus] = useState(false);
+  const [isPostHide, setIsPostHide] = useState(false);
+  const [hidePostId, setHidePostId] = useState("");
   const { data: session } = useSession();
 
   const { isLoading, data: likes, refetch } = useGetLikesByPostId(post?.id);
@@ -43,6 +47,8 @@ const PostCard = ({
   );
   const useAddLikeMutation = useAddLike();
   const useRemoveMutation = useRemoveLike();
+  const useAddHideMutation = useAddHidePost();
+  const useRemoveHideMutation = useRemoveHidePost();
 
   const optionsRef = useRef();
   const buttonRef = useRef();
@@ -66,6 +72,19 @@ const PostCard = ({
       setImageContainerAvailable(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (useRemoveHideMutation.isSuccess) {
+      setIsPostHide(false);
+    }
+  }, [useRemoveHideMutation.isSuccess]);
+
+  useEffect(() => {
+    if (useAddHideMutation.isSuccess) {
+      setIsPostHide(true);
+      setHidePostId(useAddHideMutation.data);
+    }
+  }, [useAddHideMutation.isSuccess]);
 
   useEffect(() => {
     if (useAddLikeMutation.isSuccess || useRemoveMutation.isSuccess) {
@@ -101,8 +120,17 @@ const PostCard = ({
   };
 
   const handleOpenDeletePostModal = () => {
-    setDeletePostId(post?.id);
+    const imagePublicIds = post.images.map((image) => image.publicId);
+    setDeletePostId({ postId: post?.id, imagePublicIds });
     setDeleteModalStatus(true);
+  };
+
+  const handleHidePost = () => {
+    useAddHideMutation.mutate({ userId: session.user.id, postId: post.id });
+  };
+
+  const handleRemoveHidePost = () => {
+    useRemoveHideMutation.mutate(hidePostId);
   };
 
   if (isLoading || commentLoading) {
@@ -132,6 +160,22 @@ const PostCard = ({
           <div className="flex justify-center basis-1/2">
             <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-50" />
           </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (isPostHide) {
+    return (
+      <article className="w-full p-4 h-[10rem] rounded-lg bg-dark-25">
+        <div className="flex flex-col items-center justify-center h-full gap-4 ">
+          <h2 className="text-2xl font-thin text-white">Post hide</h2>
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-lg text-white rounded w-max bg-dark-50 hover:text-primary hover:bg-dark-50"
+            onClick={handleRemoveHidePost}
+          >
+            Unhide Post
+          </button>
         </div>
       </article>
     );
@@ -198,7 +242,15 @@ const PostCard = ({
                     Edit post
                   </Link>
                 </>
-              ) : null}
+              ) : (
+                <button
+                  className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
+                  onClick={handleHidePost}
+                >
+                  <HiXMark className="text-lg " />
+                  Hide post
+                </button>
+              )}
             </div>
           ) : null}
         </div>

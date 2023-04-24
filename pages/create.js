@@ -5,6 +5,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { useForm } from "react-hook-form";
 import { useAddPost } from "@/hooks/usePosts";
 import { BsImage, BsTrashFill } from "react-icons/bs";
+import { FaImages } from "react-icons/fa";
 import ImageContainer from "@/components/ImageContainer";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/router";
@@ -59,12 +60,21 @@ export default function Create({ session }) {
           className="flex flex-col gap-8"
           encType="multipart/form-data"
         >
-          <div className="flex flex-col gap-4 text-white  w-full h-[20rem] relative  overflow-hidden">
+          <div className="flex flex-col gap-4 text-white  w-full h-[23rem] relative  overflow-hidden">
+            <div>
+              <label
+                htmlFor="images"
+                className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer bg-dark-100 hover:text-primary hover:bg-opacity-75"
+              >
+                <FaImages />
+              </label>
+            </div>
+
             <input
               type="file"
               {...register("images")}
               multiple
-              id="image"
+              id="images"
               className="absolute top-0 right-0 hidden"
             />
             {imageWatch?.[0] ? (
@@ -72,7 +82,7 @@ export default function Create({ session }) {
             ) : (
               <label
                 className="flex items-center justify-center w-full h-full border border-dashed rounded-lg bg-opacity-30 border-primary"
-                htmlFor="image"
+                htmlFor="images"
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >

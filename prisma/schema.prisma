@@ -21,6 +21,8 @@ model User {
   posts Post[]
   favourites Favourite[]
   comments Comment[]
+  hideposts Hidepost[]
+
 
 }
 
@@ -36,12 +38,26 @@ model Post{
   favourites Favourite[] 
   images Image[]
   comments Comment[]
+  hideposts Hidepost[]
+
+}
+
+model Hidepost{
+
+id String @id @default(cuid())
+postId String
+post Post @relation(fields: [postId],references: [id],onDelete: Cascade)
+userId String
+user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+createdAt     DateTime  @default(now())
+updatedAt     DateTime  @updatedAt 
 
 }
 
 model Image{
 
   id String @id @default(cuid())
+  publicId String
   url String
   postId String
   post Post @relation(fields: [postId],references: [id],onDelete: Cascade)

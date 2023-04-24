@@ -9,7 +9,7 @@ const DeletePostModal = ({
   refreshData,
 }) => {
   const useDeletePostMutation = useDeletePost();
-  console.log(deletePostId);
+
   const handleDelete = () => {
     useDeletePostMutation.mutate(deletePostId);
   };

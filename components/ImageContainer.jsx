@@ -8,16 +8,13 @@ export default function ImageContainer({
   removeImage,
   setDeletImageId,
 }) {
-  const handleDelete = (imageId) => {
+  const handleDelete = (imageId, publicId) => {
     setDeletImageId(imageId);
-    removeImage(imageId);
+    removeImage(imageId, publicId);
   };
 
   return (
-    <label
-      htmlFor="image"
-      className="w-full h-full overflow-hidden rounded-lg cursor-pointer"
-    >
+    <section className="w-full h-full overflow-hidden rounded-lg cursor-pointer">
       <swiper-container slides-per-view="1" navigation="true">
         {Array.from(images).map((image, index) => (
           <swiper-slide key={image.id || `${index}-${image.name}`}>
@@ -25,7 +22,7 @@ export default function ImageContainer({
               {image.id ? (
                 <button
                   className="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded right-2 top-2"
-                  onClick={() => handleDelete(image.id)}
+                  onClick={() => handleDelete(image.id, image.publicId)}
                   type="button"
                 >
                   <BsTrashFill className="text-red-600" />
@@ -47,6 +44,6 @@ export default function ImageContainer({
           </swiper-slide>
         ))}
       </swiper-container>
-    </label>
+    </section>
   );
 }

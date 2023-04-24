@@ -1,3 +1,4 @@
+import { addPostHide, removePostHide } from "@/lib/hidepost";
 import {
   addPost,
   deleteImage,
@@ -25,4 +26,11 @@ export const useEditPostImageUpload = () => {
 
 export const useDeleteImage = () => {
   return useMutation(deleteImage);
+};
+
+export const useAddHidePost = () => {
+  return useMutation(addPostHide);
+};
+export const useRemoveHidePost = () => {
+  return useMutation(removePostHide);
 };

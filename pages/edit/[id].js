@@ -3,21 +3,20 @@ import { getServerSession } from "next-auth";
 import React, { useEffect, useState } from "react";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { useForm } from "react-hook-form";
-import { useSession } from "next-auth/react";
 import {
-  useAddPost,
   useDeleteImage,
   useEditPost,
   useEditPostImageUpload,
 } from "@/hooks/usePosts";
-import { BsImage, BsTrashFill } from "react-icons/bs";
+import { BsImage } from "react-icons/bs";
+import { FaImages } from "react-icons/fa";
 import ImageContainer from "@/components/ImageContainer";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/router";
 import prisma from "@/lib/prisma";
 import { getPost } from "@/lib/post";
 
-const EditPost = ({ session, post }) => {
+const EditPost = ({ post }) => {
   const { register, handleSubmit, watch, setValue, reset } = useForm();
   const [allImages, setAllImages] = useState([]);
   const [deleteImageId, setDeletImageId] = useState("");
@@ -52,8 +51,8 @@ const EditPost = ({ session, post }) => {
     event.preventDefault();
   };
 
-  const removeImage = (imageId) => {
-    useImageDeleteMuatation.mutate(imageId);
+  const removeImage = (imageId, publicId) => {
+    useImageDeleteMuatation.mutate({ imageId, publicId });
   };
 
   useEffect(() => {
@@ -93,7 +92,6 @@ const EditPost = ({ session, post }) => {
 
   useEffect(() => {
     if (imageWatch?.length > 0) {
-      setAllImages((prev) => [...prev, ...imageWatch]);
       useImageUploadMutation.mutate({ postId: post.id, images: imageWatch });
     }
   }, [imageWatch]);
@@ -108,12 +106,20 @@ const EditPost = ({ session, post }) => {
           className="flex flex-col gap-8"
           encType="multipart/form-data"
         >
-          <div className="flex flex-col gap-4 text-white  w-full h-[20rem] relative  overflow-hidden">
+          <div className="flex flex-col gap-4 text-white  w-full h-[23rem] relative  overflow-hidden">
+            <div>
+              <label
+                htmlFor="images"
+                className="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer bg-dark-100 hover:text-primary hover:bg-opacity-75"
+              >
+                <FaImages />
+              </label>
+            </div>
             <input
               type="file"
               {...register("images")}
               multiple
-              id="image"
+              id="images"
               className="absolute top-0 right-0 hidden"
             />
             {allImages?.length > 0 ? (
@@ -125,7 +131,7 @@ const EditPost = ({ session, post }) => {
             ) : (
               <label
                 className="flex items-center justify-center w-full h-full border border-dashed rounded-lg bg-opacity-30 border-primary"
-                htmlFor="image"
+                htmlFor="images"
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
@@ -188,7 +194,7 @@ const EditPost = ({ session, post }) => {
           {useImageDeleteMuatation.isLoading ? (
             <div className="fixed py-4 bg-red-400 rounded bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
-                Image Uploading...
+                Image Deleting...
               </p>
             </div>
           ) : null}

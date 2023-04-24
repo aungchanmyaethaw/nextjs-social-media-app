@@ -54,7 +54,7 @@ export default function Navbar() {
         </span>
       </div>
       {dropDownStatus ? (
-        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[15rem] w-full bg-dark-25 p-4 ">
+        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[15rem] w-full bg-dark-25 p-4 z-50">
           <button
             className="w-full py-2 text-lg text-red-600 bg-dark-50"
             onClick={signOut}

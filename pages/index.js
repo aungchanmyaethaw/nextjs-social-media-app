@@ -23,7 +23,7 @@ export default function Root({ posts }) {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  let posts = await getPosts(prisma);
+  let posts = await getPosts(prisma, session?.user.id);
   posts = JSON.parse(JSON.stringify(posts));
 
   if (!session) {

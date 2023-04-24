@@ -1,5 +1,12 @@
 import prisma from "@/lib/prisma";
 import nc from "next-connect";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -10,8 +17,14 @@ const handler = nc({
     res.status(404).end("not found");
   },
 })
-  .delete(async (req, res) => {
+  .post(async (req, res) => {
     const { id } = req.query;
+    const { imagePublicIds } = req.body;
+    console.log(imagePublicIds);
+
+    for (const publicId of imagePublicIds) {
+      await cloudinary.uploader.destroy(publicId);
+    }
 
     await prisma.post.delete({
       where: {
