@@ -35,7 +35,7 @@ export default function Navbar() {
         <CustomLink to="/create">
           <BsPlusCircle size={22} />
         </CustomLink>
-        <CustomLink to="/save">
+        <CustomLink to={`/save?userid=${session?.user.id}`}>
           <BsBookmark size={22} />
         </CustomLink>
       </nav>
@@ -70,7 +70,7 @@ export default function Navbar() {
 const CustomLink = ({ to, children }) => {
   const router = useRouter();
 
-  const currentLink = router.pathname === to;
+  const currentLink = router.pathname.split("?")[0] === to.split("?")[0];
 
   return (
     <Link href={to} className={`${currentLink ? "text-primary" : null}`}>

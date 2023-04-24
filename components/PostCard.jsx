@@ -39,7 +39,7 @@ const PostCard = ({
   setCommentPostId,
   setDeletePostId,
   setDeleteModalStatus,
-  isProfile = false,
+  isSavePage,
 }) => {
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
   const [captionDetails, setCaptionDetails] = useState(false);
@@ -92,11 +92,13 @@ const PostCard = ({
       setImageContainerAvailable(true);
     }
   }, []);
+
   useEffect(() => {
     if (useAddSaveMutation.isSuccess || useRemoveSaveMutation.isSuccess) {
+      console.count("render");
       savesRefetch();
     }
-  }, [useAddSaveMutation.isSuccess || useRemoveSaveMutation.isSuccess]);
+  }, [useAddSaveMutation.isSuccess, useRemoveSaveMutation.isSuccess]);
 
   useEffect(() => {
     if (useAddLikeMutation.isSuccess || useRemoveLikeMutation.isSuccess) {
@@ -155,14 +157,12 @@ const PostCard = ({
 
   const addSave = () => {
     useAddSaveMutation.mutate({ userId: session?.user.id, postId: post?.id });
-    setIsSaved(true);
   };
 
   const removeSave = () => {
     const isSaved = saves.find((save) => save.user.id === session.user.id);
 
     useRemoveSaveMutation.mutate({ postId: post.id, savedId: isSaved.id });
-    setIsSaved(false);
   };
 
   const handleOpenCommentModal = () => {
@@ -314,13 +314,15 @@ const PostCard = ({
                       Save post
                     </button>
                   )}
-                  <button
-                    className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
-                    onClick={handleHidePost}
-                  >
-                    <HiXMark className="text-lg " />
-                    Hide post
-                  </button>
+                  {!isSavePage ? (
+                    <button
+                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
+                      onClick={handleHidePost}
+                    >
+                      <HiXMark className="text-lg " />
+                      Hide post
+                    </button>
+                  ) : null}
                 </>
               )}
             </div>

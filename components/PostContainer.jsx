@@ -4,7 +4,7 @@ import ImageModal from "./ImageModal";
 import CommentModal from "./CommentModal";
 import DeletePostModal from "./DeletePostModal";
 
-const PostContainer = ({ posts, refreshData }) => {
+const PostContainer = ({ posts, refreshData, isSavePage = false }) => {
   const [imageModalStatus, setImageModalStatus] = useState(false);
   const [commentModalStatus, setCommentModalStatus] = useState(false);
   const [commentPostId, setCommentPostId] = useState(false);
@@ -39,6 +39,7 @@ const PostContainer = ({ posts, refreshData }) => {
           setCommentPostId={setCommentPostId}
           setDeletePostId={setDeletePostId}
           setDeleteModalStatus={setDeleteModalStatus}
+          isSavePage={isSavePage}
         />
       ))}
       {imageModalStatus ? (

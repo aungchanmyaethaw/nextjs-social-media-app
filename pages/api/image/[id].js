@@ -15,12 +15,10 @@ const handler = nc({
   onNoMatch: (req, res) => {
     res.status(404).end("not found");
   },
-}).post(async (req, res) => {
-  const { id } = req.query;
-  const { publicId } = req.body;
-  console.log(req.body);
+}).delete(async (req, res) => {
+  const { id, publicid } = req.query;
 
-  await cloudinary.uploader.destroy(publicId);
+  await cloudinary.uploader.destroy(publicid);
 
   await prisma.image.delete({
     where: {

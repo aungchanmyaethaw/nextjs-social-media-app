@@ -62,7 +62,7 @@ model Save{
 id String @id @default(cuid())
 postId String
 post Post @relation(fields: [postId],references: [id],onDelete: Cascade)
-userId String @unique
+userId String 
 user User @relation(fields: [userId],references: [id],onDelete: Cascade)
 createdAt     DateTime  @default(now())
 updatedAt     DateTime  @updatedAt 
@@ -86,7 +86,7 @@ model Favourite{
 id String @id @default(cuid())
 postId String
 post Post @relation(fields: [postId],references: [id],onDelete: Cascade)
-userId String @unique
+userId String 
 user User @relation(fields: [userId],references: [id],onDelete: Cascade)
 createdAt     DateTime  @default(now())
 updatedAt     DateTime  @updatedAt 

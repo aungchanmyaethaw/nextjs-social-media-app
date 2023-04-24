@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ data: result });
   }
 
-  if (req.method === "POST" && req.body.userId) {
+  if (req.method === "POST") {
     const { userId } = req.body;
 
     await prisma.favourite.create({
@@ -37,12 +37,12 @@ export default async function handler(req, res) {
     return res.status(201).json({ msg: "add Like" });
   }
 
-  if (req.method === "POST" && req.body.likeId) {
-    const { likeId } = req.body;
+  if (req.method === "DELETE") {
+    const { likeid } = req.query;
 
     await prisma.favourite.delete({
       where: {
-        id: likeId,
+        id: likeid,
       },
     });
 

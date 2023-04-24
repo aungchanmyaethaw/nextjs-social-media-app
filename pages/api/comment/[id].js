@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ data: result });
   }
 
-  if (req.method === "POST" && req.body.userId) {
+  if (req.method === "POST") {
     const { id } = req.query;
     const { comment, userId } = req.body;
     await prisma.comment.create({
@@ -39,16 +39,16 @@ export default async function handler(req, res) {
     return res.status(201).json({ msg: "hello" });
   }
 
-  if (req.method === "POST" && req.body.commentId) {
-    const { commentId } = req.body;
+  if (req.method === "DELETE") {
+    const { commentid } = req.query;
 
     await prisma.comment.delete({
       where: {
-        id: commentId,
+        id: commentid,
       },
     });
 
-    return res.status(201).json({ msg: "delete comment" });
+    return res.status(200).json({ msg: "delete comment" });
   }
 
   if (req.method === "PATCH") {

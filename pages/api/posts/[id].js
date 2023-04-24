@@ -20,11 +20,10 @@ const handler = nc({
   .post(async (req, res) => {
     const { id } = req.query;
     const { imagePublicIds } = req.body;
-    console.log(imagePublicIds);
 
-    for (const publicId of imagePublicIds) {
-      await cloudinary.uploader.destroy(publicId);
-    }
+    await Promise.all(
+      imagePublicIds.map((publicId) => cloudinary.uploader.destroy(publicId))
+    );
 
     await prisma.post.delete({
       where: {
@@ -34,10 +33,9 @@ const handler = nc({
 
     return res.status(200).json({ msg: "post deleted!" });
   })
-  .put(async (req, res) => {
+  .patch(async (req, res) => {
     const { id } = req.query;
     const { caption, onlyMe } = req.body;
-    console.log(req.body);
 
     await prisma.post.update({
       where: {
@@ -49,7 +47,7 @@ const handler = nc({
       },
     });
 
-    return res.status(201).json({ msg: "success" });
+    return res.status(200).json({ msg: "success" });
   });
 
 export default handler;
