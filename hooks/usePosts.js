@@ -6,7 +6,8 @@ import {
   editPost,
   editPostImageUpload,
 } from "@/lib/post";
-import { useMutation } from "@tanstack/react-query";
+import { addSave, getSavedPosts, removeSave } from "@/lib/save";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useAddPost = () => {
   return useMutation(addPost);
@@ -33,4 +34,16 @@ export const useAddHidePost = () => {
 };
 export const useRemoveHidePost = () => {
   return useMutation(removePostHide);
+};
+
+export const useGetSavesbyPost = (postId) => {
+  return useQuery(["getsavesbypost", postId], () => getSavedPosts(postId));
+};
+
+export const useAddSave = () => {
+  return useMutation(addSave);
+};
+
+export const useRemoveSave = () => {
+  return useMutation(removeSave);
 };

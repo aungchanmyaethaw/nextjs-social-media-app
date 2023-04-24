@@ -3,7 +3,6 @@ import { getCurrentDate } from "@/utils/getCurrentDate";
 import React, { useEffect, useState } from "react";
 import { FaLock, FaGlobeAsia } from "react-icons/fa";
 import { HiXMark } from "react-icons/hi2";
-import PostImageContainer from "./PostImageContainer";
 import { useSession } from "next-auth/react";
 import {
   BsHeart,
@@ -12,15 +11,24 @@ import {
   BsThreeDots,
   BsFillTrashFill,
   BsPencilSquare,
+  BsBookmark,
 } from "react-icons/bs";
+import { TbBookmarkOff } from "react-icons/tb";
 import {
   useAddLike,
   useGetLikesByPostId,
   useRemoveLike,
 } from "@/hooks/useFavourite";
 import { useGetComments } from "@/hooks/useComment";
+import PostImageContainer from "./PostImageContainer";
 import Link from "next/link";
-import { useAddHidePost, useRemoveHidePost } from "@/hooks/usePosts";
+import {
+  useAddHidePost,
+  useAddSave,
+  useGetSavesbyPost,
+  useRemoveHidePost,
+  useRemoveSave,
+} from "@/hooks/usePosts";
 
 const PostCard = ({
   post,
@@ -36,6 +44,7 @@ const PostCard = ({
   const [imageContainerAvailable, setImageContainerAvailable] = useState(false);
   const [captionDetails, setCaptionDetails] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [optionsStatus, setOptionsStatus] = useState(false);
   const [isPostHide, setIsPostHide] = useState(false);
   const [hidePostId, setHidePostId] = useState("");
@@ -45,13 +54,24 @@ const PostCard = ({
   const { isLoading: commentLoading, data: comments } = useGetComments(
     post?.id
   );
+  const {
+    isLoading: saveLoading,
+    data: saves,
+    refetch: savesRefetch,
+  } = useGetSavesbyPost(post?.id);
+
   const useAddLikeMutation = useAddLike();
-  const useRemoveMutation = useRemoveLike();
+  const useRemoveLikeMutation = useRemoveLike();
   const useAddHideMutation = useAddHidePost();
   const useRemoveHideMutation = useRemoveHidePost();
+  const useAddSaveMutation = useAddSave();
+  const useRemoveSaveMutation = useRemoveSave();
 
   const optionsRef = useRef();
   const buttonRef = useRef();
+
+  // ---------- effects  ---------- //
+
   useEffect(() => {
     const event = document.addEventListener("click", (event) => {
       if (event.target === buttonRef.current) {
@@ -72,6 +92,17 @@ const PostCard = ({
       setImageContainerAvailable(true);
     }
   }, []);
+  useEffect(() => {
+    if (useAddSaveMutation.isSuccess || useRemoveSaveMutation.isSuccess) {
+      savesRefetch();
+    }
+  }, [useAddSaveMutation.isSuccess || useRemoveSaveMutation.isSuccess]);
+
+  useEffect(() => {
+    if (useAddLikeMutation.isSuccess || useRemoveLikeMutation.isSuccess) {
+      refetch();
+    }
+  }, [useAddLikeMutation.isSuccess, useRemoveLikeMutation.isSuccess]);
 
   useEffect(() => {
     if (useRemoveHideMutation.isSuccess) {
@@ -87,12 +118,6 @@ const PostCard = ({
   }, [useAddHideMutation.isSuccess]);
 
   useEffect(() => {
-    if (useAddLikeMutation.isSuccess || useRemoveMutation.isSuccess) {
-      refetch();
-    }
-  }, [useAddLikeMutation.isSuccess, useRemoveMutation.isSuccess]);
-
-  useEffect(() => {
     if (!isLoading && session) {
       const isLiked = likes.find((like) => like.user.id === session.user.id);
 
@@ -104,6 +129,20 @@ const PostCard = ({
     }
   }, [likes, isLoading, session]);
 
+  useEffect(() => {
+    if (!saveLoading && session) {
+      const isSaved = saves.find((save) => save.user.id === session.user.id);
+
+      if (isSaved) {
+        setIsSaved(true);
+      } else {
+        setIsSaved(false);
+      }
+    }
+  }, [session, saveLoading, saves]);
+
+  // ---------- handle func ---------- //
+
   const addLike = () => {
     useAddLikeMutation.mutate({ userId: session?.user.id, postId: post?.id });
   };
@@ -111,7 +150,19 @@ const PostCard = ({
   const removeLike = () => {
     const isLiked = likes.find((like) => like.user.id === session.user.id);
 
-    useRemoveMutation.mutate({ postId: post.id, likeId: isLiked.id });
+    useRemoveLikeMutation.mutate({ postId: post.id, likeId: isLiked.id });
+  };
+
+  const addSave = () => {
+    useAddSaveMutation.mutate({ userId: session?.user.id, postId: post?.id });
+    setIsSaved(true);
+  };
+
+  const removeSave = () => {
+    const isSaved = saves.find((save) => save.user.id === session.user.id);
+
+    useRemoveSaveMutation.mutate({ postId: post.id, savedId: isSaved.id });
+    setIsSaved(false);
   };
 
   const handleOpenCommentModal = () => {
@@ -133,7 +184,7 @@ const PostCard = ({
     useRemoveHideMutation.mutate(hidePostId);
   };
 
-  if (isLoading || commentLoading) {
+  if (isLoading || commentLoading || saveLoading) {
     return (
       <article className="w-full p-4 rounded-lg bg-dark-25">
         <div className="flex items-center gap-2 mb-6">
@@ -243,13 +294,34 @@ const PostCard = ({
                   </Link>
                 </>
               ) : (
-                <button
-                  className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
-                  onClick={handleHidePost}
-                >
-                  <HiXMark className="text-lg " />
-                  Hide post
-                </button>
+                <>
+                  {isSaved ? (
+                    <button
+                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-50"
+                      onClick={removeSave}
+                      disabled={useRemoveSaveMutation.isLoading}
+                    >
+                      <TbBookmarkOff className="text-lg " />
+                      Unsave post
+                    </button>
+                  ) : (
+                    <button
+                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-50"
+                      onClick={addSave}
+                      disabled={useAddSaveMutation.isLoading}
+                    >
+                      <BsBookmark />
+                      Save post
+                    </button>
+                  )}
+                  <button
+                    className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-red-400 hover:bg-dark-50"
+                    onClick={handleHidePost}
+                  >
+                    <HiXMark className="text-lg " />
+                    Hide post
+                  </button>
+                </>
               )}
             </div>
           ) : null}

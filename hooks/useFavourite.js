@@ -1,5 +1,6 @@
 import { addLike, getLikesByPost, removeLike } from "@/lib/favourite";
 import { useMutation, useQuery } from "@tanstack/react-query";
+
 export const useGetLikesByPostId = (postId) => {
   return useQuery(["likesbypostid", postId], () => getLikesByPost(postId));
 };

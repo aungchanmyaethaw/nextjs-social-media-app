@@ -3,7 +3,7 @@ import React from "react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 
-export default function Favourite() {
+export default function Save() {
   return <Layout>favourite</Layout>;
 }
 

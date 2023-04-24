@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import { BsHouse, BsHeart, BsPlusCircle } from "react-icons/bs";
+import { BsHouse, BsHeart, BsPlusCircle, BsBookmark } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
@@ -35,8 +35,8 @@ export default function Navbar() {
         <CustomLink to="/create">
           <BsPlusCircle size={22} />
         </CustomLink>
-        <CustomLink to="/favourite">
-          <BsHeart size={22} />
+        <CustomLink to="/save">
+          <BsBookmark size={22} />
         </CustomLink>
       </nav>
       <div
