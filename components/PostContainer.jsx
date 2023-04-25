@@ -27,7 +27,7 @@ const PostContainer = ({ posts, refreshData, isSavePage = false }) => {
   }, [imageModalStatus, commentModalStatus, deleteModalStatus]);
 
   return (
-    <section className="flex flex-col items-center max-w-2xl gap-4 p-4 mx-auto mt-4">
+    <section className="flex flex-col items-center max-w-2xl gap-4 p-4 mx-auto ">
       {posts.map((post) => (
         <PostCard
           key={post.id}

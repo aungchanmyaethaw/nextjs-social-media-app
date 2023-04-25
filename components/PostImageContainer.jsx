@@ -15,7 +15,7 @@ export default function PostImageContainer({
   };
 
   return (
-    <section className="w-full h-[30rem] bg-gray-400 overflow-hidden rounded-lg cursor-grab">
+    <section className="w-full h-[30rem]   overflow-hidden rounded-lg cursor-grab">
       <swiper-container slides-per-view="auto" navigation="true">
         {Array.from(images).map((image, index) => (
           <swiper-slide key={`${index}-${image.name}`}>

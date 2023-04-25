@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useForm } from "react-hook-form";
 import { useAddPost } from "@/hooks/usePosts";
-import { BsImage, BsTrashFill } from "react-icons/bs";
+import { BsImage } from "react-icons/bs";
 import { FaImages } from "react-icons/fa";
 import ImageContainer from "@/components/ImageContainer";
 import { ClipLoader } from "react-spinners";

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
   return (

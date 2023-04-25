@@ -1,7 +1,14 @@
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import { BsHouse, BsHeart, BsPlusCircle, BsBookmark } from "react-icons/bs";
+import {
+  BsHouse,
+  BsHeart,
+  BsPlusCircle,
+  BsBookmark,
+  BsPerson,
+} from "react-icons/bs";
+import { BiLogOut } from "react-icons/bi";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
@@ -9,6 +16,12 @@ export default function Navbar() {
   const { data: session } = useSession();
   const [dropDownStatus, setDropDownStatus] = useState(false);
   const profileRef = useRef();
+
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   useEffect(() => {
     const event = document.addEventListener("click", (e) => {
@@ -50,15 +63,22 @@ export default function Navbar() {
           className="w-8 h-8 rounded-full pointer-events-none "
         />
         <span className="text-white pointer-events-none">
-          {session?.user?.name}
+          {session?.user?.username || session?.user?.name}
         </span>
       </div>
       {dropDownStatus ? (
-        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[15rem] w-full bg-dark-25 p-4 z-50">
+        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[12rem] w-full bg-dark-25 p-4 z-50 space-y-2">
+          <Link href="/profile" className="block">
+            <button className="flex items-center justify-center w-full gap-2 py-2 font-semibold text-white bg-dark-50 hover:bg-dark-75 hover:text-primary">
+              <BsPerson size={18} />
+              Profile
+            </button>
+          </Link>
           <button
-            className="w-full py-2 text-lg text-red-600 bg-dark-50"
+            className="flex items-center justify-center w-full gap-2 py-2 font-semibold text-red-600 bg-dark-50 hover:bg-dark-75"
             onClick={signOut}
           >
+            <BiLogOut size={18} />
             Log out
           </button>
         </div>

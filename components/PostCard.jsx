@@ -190,26 +190,26 @@ const PostCard = ({
         <div className="flex items-center gap-2 mb-6">
           <img
             src="./profile.png"
-            className="w-10 h-10 bg-gray-400 bg-opacity-50 rounded-full pointer-events-none"
+            className="w-10 h-10 bg-gray-400 bg-opacity-25 rounded-full pointer-events-none"
           />
           <div className="space-y-1">
-            <span className="w-[10rem] h-2 bg-gray-400 bg-opacity-50 block" />
+            <span className="w-[10rem] h-2 bg-gray-400 bg-opacity-25 block" />
             <div className="flex items-center gap-1">
               <FaGlobeAsia size={14} className="text-gray-400" />
 
-              <span className="w-[5rem] h-2 bg-gray-400 bg-opacity-50 block" />
+              <span className="w-[5rem] h-2 bg-gray-400 bg-opacity-25 block" />
             </div>
           </div>
         </div>
-        <div className="mb-6 w-full h-[30rem] bg-gray-400 bg-opacity-50 rounded-lg" />
-        <div className="block w-full h-3 mb-3 bg-gray-400 bg-opacity-50" />
-        <div className="block w-3/4 h-3 bg-gray-400 bg-opacity-50" />
+        <div className="mb-6 w-full h-[30rem] bg-gray-400 bg-opacity-25 rounded-lg" />
+        <div className="block w-full h-3 mb-3 bg-gray-400 bg-opacity-25" />
+        <div className="block w-3/4 h-3 bg-gray-400 bg-opacity-25" />
         <div className="flex py-2 mt-4 border-t border-t-gray-400">
           <div className="flex justify-center basis-1/2">
-            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-50" />
+            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-25" />
           </div>
           <div className="flex justify-center basis-1/2">
-            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-50" />
+            <div className="block w-20 h-3 mb-3 bg-gray-400 bg-opacity-25" />
           </div>
         </div>
       </article>
@@ -239,7 +239,7 @@ const PostCard = ({
           <img
             src={post?.author?.image}
             alt={"profile"}
-            className="w-10 h-10 rounded-full pointer-events-none "
+            className="block w-10 h-10 rounded-full pointer-events-none"
           />
           <div className="space-y-1">
             <span className="text-white pointer-events-none">
@@ -297,7 +297,7 @@ const PostCard = ({
                 <>
                   {isSaved ? (
                     <button
-                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-50"
+                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-25"
                       onClick={removeSave}
                       disabled={useRemoveSaveMutation.isLoading}
                     >
@@ -306,7 +306,7 @@ const PostCard = ({
                     </button>
                   ) : (
                     <button
-                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-50"
+                      className="flex items-center w-full gap-1 p-2 text-sm text-white rounded bg-dark-50 hover:text-primary hover:bg-dark-25"
                       onClick={addSave}
                       disabled={useAddSaveMutation.isLoading}
                     >

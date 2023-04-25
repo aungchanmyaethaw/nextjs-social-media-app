@@ -15,7 +15,9 @@ export default function Root({ posts }) {
   return (
     <>
       <Layout>
-        <PostContainer posts={posts} refreshData={refreshData} />
+        <section className="mt-4">
+          <PostContainer posts={posts} refreshData={refreshData} />
+        </section>
       </Layout>
     </>
   );
