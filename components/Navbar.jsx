@@ -68,7 +68,7 @@ export default function Navbar() {
       </div>
       {dropDownStatus ? (
         <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[12rem] w-full bg-dark-25 p-4 z-50 space-y-2">
-          <Link href="/profile" className="block">
+          <Link href={`/profile/${session?.user.id}`} className="block">
             <button className="flex items-center justify-center w-full gap-2 py-2 font-semibold text-white bg-dark-50 hover:bg-dark-75 hover:text-primary">
               <BsPerson size={18} />
               Profile

@@ -242,9 +242,9 @@ const PostCard = ({
             className="block w-10 h-10 rounded-full pointer-events-none"
           />
           <div className="space-y-1">
-            <span className="text-white pointer-events-none">
-              {post?.author?.name}
-            </span>
+            <Link href={`/profile/${post.author.id}`} className="text-white ">
+              {post?.author?.username || post?.author?.name}
+            </Link>
             <div className="flex items-center gap-1">
               {post.onlyMe ? (
                 <FaLock size={14} className="text-gray-400" />

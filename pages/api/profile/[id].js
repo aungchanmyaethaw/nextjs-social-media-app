@@ -26,19 +26,30 @@ const handler = nc({
       return res.status(400).json({ msg: " username is required!" });
     }
 
-    const result = await uploader(req.file.path);
+    if (req.file) {
+      const result = await uploader(req.file.path);
 
-    await prisma.user.update({
-      where: {
-        id: id,
-      },
-      data: {
-        username: username,
-        image: result.secure_url,
-      },
-    });
+      await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          username: username,
+          image: result.secure_url,
+        },
+      });
+    } else {
+      await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          username: username,
+        },
+      });
+    }
 
-    res.status(200).json({ data: { username } });
+    res.status(200).json({ msg: "data updated" });
   });
 
 export default handler;

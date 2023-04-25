@@ -14,16 +14,25 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
     setValue("name", user?.name);
     setValue("username", user?.username);
     setValue("email", user?.email);
-    setValue("image", user?.image);
   }, [setValue, user]);
 
-  const onSubmit = (data) => {
-    const tempData = {
-      userId: user.id,
-      username: data.username,
-      image: data.image[0],
-    };
+  const imageWatch = watch("image");
 
+  const onSubmit = (data) => {
+    let tempData;
+
+    if (Array.from(imageWatch).length > 0) {
+      tempData = {
+        userId: user.id,
+        username: data.username,
+        image: data.image[0],
+      };
+    } else {
+      tempData = {
+        userId: user.id,
+        username: data.username,
+      };
+    }
     profileEditMutation.mutate(tempData);
   };
 
@@ -33,6 +42,8 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
       setProfileModalStatus(false);
     }
   }, [profileEditMutation.isSuccess]);
+
+  console.log(imageWatch);
 
   return (
     <div
@@ -47,12 +58,23 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
           className="flex flex-col items-center py-8"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
+          <img
+            src={imageWatch ? URL.createObjectURL(imageWatch[0]) : user.image}
+            alt=""
+            className="object-cover w-[96px] h-[96px] mb-2 overflow-hidden rounded-full"
+          />
+          <label
+            htmlFor="image"
+            className="mt-4  flex items-center gap-2 px-6 py-2 mx-auto  rounded bg-primary hover:bg-yellow-300 !text-dark-100 font-semibold"
+          >
+            Choose Image
+          </label>
+          <div className="flex flex-col gap-2 text-white w-[30rem]  mb-6">
             <input
-              id="username"
+              id="image"
               type="file"
-              {...register("image", { required: true })}
-              className="p-4 text-white rounded-lg bg-dark-75 focus:outline-none placeholder:text-gray-400 caret-primary"
+              {...register("image")}
+              className="hidden"
             />
           </div>
           <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
@@ -85,7 +107,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
               readOnly
             />
           </div>
-          <div className="flex items-center justify-center gap-4 mt-12">
+          <div className="flex items-center justify-center gap-4 mt-8">
             <button
               className="flex items-center gap-2 px-8 py-2 mx-auto  rounded bg-primary hover:bg-yellow-300 !text-dark-100 font-semibold"
               type="submit"
