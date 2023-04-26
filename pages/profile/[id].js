@@ -76,12 +76,14 @@ export default function Profile({ posts, session, user }) {
               <h2 className="text-xl font-medium text-gray-400">
                 Currently empty...
               </h2>
-              <Link
-                href="/create"
-                className="text-lg font-medium text-white underline hover:text-primary"
-              >
-                Create your first post
-              </Link>
+              {session?.user?.id === id ? (
+                <Link
+                  href="/create"
+                  className="text-lg font-medium text-white underline hover:text-primary"
+                >
+                  Create your first post
+                </Link>
+              ) : null}
             </div>
           )}
         </div>
