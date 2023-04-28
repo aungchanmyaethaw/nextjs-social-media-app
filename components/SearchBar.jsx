@@ -25,11 +25,11 @@ const SearchBar = () => {
           {data.map((person) => (
             <Link
               href={`/profile/${person.id}`}
-              className="group flex items-center gap-2 "
+              className="flex items-center gap-2 group "
               key={person.id}
             >
               <img src={person.image} alt="" className="w-8 h-8 rounded-full" />
-              <span className="group-hover:text-primary text-white whitespace-nowrap">
+              <span className="text-white group-hover:text-primary whitespace-nowrap">
                 {person.username || person.name}
               </span>
             </Link>
@@ -37,7 +37,7 @@ const SearchBar = () => {
         </ul>
       ) : query !== "" ? (
         <span className="absolute p-4 bg-dark-25 max-w-[320px] w-full rounded top-12 left-0 z-50 block text-white">
-          no results for "{query}"
+          no results for &quot;{query}&quot;
         </span>
       ) : null}
     </div>
