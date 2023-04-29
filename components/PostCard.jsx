@@ -95,7 +95,6 @@ const PostCard = ({
 
   useEffect(() => {
     if (useAddSaveMutation.isSuccess || useRemoveSaveMutation.isSuccess) {
-      console.count("render");
       savesRefetch();
     }
   }, [useAddSaveMutation.isSuccess, useRemoveSaveMutation.isSuccess]);

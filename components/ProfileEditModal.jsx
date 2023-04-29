@@ -10,14 +10,6 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
 
   const { user } = session;
 
-  useEffect(() => {
-    setValue("name", user?.name);
-    setValue("username", user?.username);
-    setValue("email", user?.email);
-  }, [setValue, user]);
-
-  const imageWatch = watch("image");
-
   const onSubmit = (data) => {
     let tempData;
 
@@ -43,7 +35,14 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
     }
   }, [profileEditMutation.isSuccess]);
 
-  console.log(imageWatch);
+  useEffect(() => {
+    setValue("name", user?.name);
+    setValue("username", user?.username);
+    setValue("email", user?.email);
+    setValue("image", user.image);
+  }, [setValue, user]);
+
+  const imageWatch = watch("image", "");
 
   return (
     <div
@@ -59,7 +58,11 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <img
-            src={imageWatch ? URL.createObjectURL(imageWatch[0]) : user.image}
+            src={
+              typeof imageWatch === "string"
+                ? user.image
+                : URL.createObjectURL(imageWatch[0])
+            }
             alt=""
             className="object-cover w-[96px] h-[96px] mb-2 overflow-hidden rounded-full"
           />
@@ -69,14 +72,15 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
           >
             Choose Image
           </label>
-          <div className="flex flex-col gap-2 text-white w-[30rem]  mb-6">
-            <input
-              id="image"
-              type="file"
-              {...register("image")}
-              className="hidden"
-            />
-          </div>
+
+          <input
+            id="image"
+            type="file"
+            name="image"
+            {...register("image")}
+            className="hidden"
+          />
+
           <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
             <label htmlFor="username">Username</label>
             <input

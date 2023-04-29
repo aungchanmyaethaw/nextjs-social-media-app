@@ -26,9 +26,8 @@ export const authOptions = {
     session: async ({ session, user }) => {
       session.user.id = user.id;
       session.user.username = user.username;
-      if (user.image) {
-        session.user.image = user.image;
-      }
+      session.user.image = user.image;
+
       return Promise.resolve(session);
     },
   },
