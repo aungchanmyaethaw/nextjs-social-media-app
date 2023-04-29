@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     }
 
     const result = await prisma.user.findMany({
-      where: { username: { contains: q } },
+      where: { username: { contains: q, mode: "insensitive" } },
 
       orderBy: [
         {
