@@ -7,26 +7,20 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const handler = nc({
-  onError: (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).end("Something broke!");
-  },
-  onNoMatch: (req, res) => {
-    res.status(404).end("not found");
-  },
-}).delete(async (req, res) => {
-  const { id, publicid } = req.query;
+export default async function handler(req, res) {
+  if (req.method === "DELETE") {
+    const { id, publicid } = req.query;
 
-  await cloudinary.uploader.destroy(publicid);
+    await cloudinary.uploader.destroy(publicid);
 
-  await prisma.image.delete({
-    where: {
-      id: id,
-    },
-  });
+    await prisma.image.delete({
+      where: {
+        id: id,
+      },
+    });
 
-  return res.status(200).json({ msg: "image deleted!" });
-});
+    return res.status(200).json({ msg: "image deleted!" });
+  }
 
-export default handler;
+  return res.status(501).json({ msg: "Something broke!" });
+}
