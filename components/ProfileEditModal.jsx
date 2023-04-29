@@ -18,20 +18,12 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
   const { user } = session;
 
   const onSubmit = (data) => {
-    let tempData;
+    const tempData = {
+      userId: user.id,
+      username: data.username,
+      image: typeof data.image === "string" ? data.image : data.image[0],
+    };
 
-    if (Array.from(imageWatch).length > 0) {
-      tempData = {
-        userId: user.id,
-        username: data.username,
-        image: data.image[0],
-      };
-    } else {
-      tempData = {
-        userId: user.id,
-        username: data.username,
-      };
-    }
     profileEditMutation.mutate(tempData);
   };
 
@@ -50,8 +42,6 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
   }, [setValue, user]);
 
   const imageWatch = watch("image", "");
-
-  console.log(errors.username);
 
   return (
     <div
