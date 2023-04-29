@@ -10,7 +10,14 @@ import ImageContainer from "@/components/ImageContainer";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/router";
 export default function Create({ session }) {
-  const { register, handleSubmit, watch, setValue, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
   const router = useRouter();
   const imageWatch = watch("images");
   const usePostMutation = useAddPost();
@@ -107,6 +114,9 @@ export default function Create({ session }) {
               placeholder="Enter a caption ..."
               rows={3}
             />
+            {errors.caption ? (
+              <p className="text-red-400">Please add caption</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <label className="mr-2 text-white ">

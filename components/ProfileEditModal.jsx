@@ -5,7 +5,14 @@ import { BsPencilSquare } from "react-icons/bs";
 import { ClipLoader } from "react-spinners";
 
 const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
-  const { register, handleSubmit, watch, setValue, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
   const profileEditMutation = useEditProfile();
 
   const { user } = session;
@@ -43,6 +50,8 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
   }, [setValue, user]);
 
   const imageWatch = watch("image", "");
+
+  console.log(errors.username);
 
   return (
     <div
@@ -86,10 +95,15 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
             <input
               id="username"
               type="text"
-              {...register("username", { required: true })}
+              {...register("username", {
+                required: true,
+              })}
               className="p-4 text-white rounded-lg bg-dark-75 focus:outline-none placeholder:text-gray-400 caret-primary"
               placeholder="Enter your username ..."
             />
+            {errors.username ? (
+              <p className="text-red-400">Please add username</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
             <label htmlFor="name">Name</label>
