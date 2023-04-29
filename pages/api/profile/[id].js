@@ -2,6 +2,7 @@ import { upload } from "@/middlewares/getFormData";
 import nc from "next-connect";
 
 import { v2 as cloudinary } from "cloudinary";
+import prisma from "@/lib/prisma";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
