@@ -65,6 +65,9 @@ const EditPost = ({ post }) => {
   useEffect(() => {
     if (useImageDeleteMuatation.isSuccess) {
       refreshData();
+      setAllImages((prev) => {
+        prev.filter((image) => image?.id !== deleteImageId);
+      });
     }
   }, [useImageDeleteMuatation.isSuccess]);
 
