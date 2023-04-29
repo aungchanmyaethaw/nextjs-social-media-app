@@ -2,6 +2,7 @@ import { useGetUsers } from "@/hooks/useUser";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import { ClipLoader } from "react-spinners";
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
@@ -19,7 +20,7 @@ const SearchBar = () => {
       />
       {/* searchlist */}
       {isLoading ? (
-        <h1>Loading</h1>
+        <ClipLoader size={14} color="white" className="shrink-0" />
       ) : data.length > 0 ? (
         <ul className="absolute p-4 bg-dark-25 max-w-[320px] w-full rounded top-12 left-0 z-50 flex flex-col gap-2">
           {data.map((person) => (
