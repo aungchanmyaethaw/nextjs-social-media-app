@@ -132,14 +132,14 @@ export default function Create({ session }) {
             </select>
           </div>
           {usePostMutation.isSuccess ? (
-            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-green-400 rounded bottom-20 lg:bottom-8  right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 Upload Successful!
               </p>
             </div>
           ) : null}
           {usePostMutation.isError ? (
-            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-green-400 rounded bottom-20 lg:bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 {usePostMutation.error.message}
               </p>

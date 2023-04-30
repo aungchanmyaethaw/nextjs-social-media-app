@@ -171,28 +171,28 @@ const EditPost = ({ post }) => {
             </select>
           </div>
           {useEditPostMutation.isSuccess || useImageUploadMutation.isLoading ? (
-            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-green-400 rounded bottom-20 lg:bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 Upload Successful!
               </p>
             </div>
           ) : null}
           {useImageUploadMutation.isLoading ? (
-            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-green-400 rounded bottom-20 lg:bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 Image Uploading...
               </p>
             </div>
           ) : null}
           {useEditPostMutation.isError ? (
-            <div className="fixed py-4 bg-green-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-green-400 rounded bottom-20 lg:bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 {useEditPostMutation.error.message}
               </p>
             </div>
           ) : null}
           {useImageDeleteMuatation.isLoading ? (
-            <div className="fixed py-4 bg-red-400 rounded bottom-8 right-8 w-[15rem]">
+            <div className="fixed py-4 bg-red-400 rounded bottom-20 lg:bottom-8 right-8 w-[15rem]">
               <p className="text-lg font-medium text-center">
                 Image Deleting...
               </p>
