@@ -4,7 +4,7 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { BsGoogle } from "react-icons/bs";
 export default function SignIn({ providers }) {
   return (
-    <main className="container flex items-center justify-center min-h-screen mx-auto bg-dark-100 font-inter">
+    <main className="flex items-center justify-center w-full min-h-screen mx-auto bg-dark-100 font-inter">
       <div className="p-4 space-y-4 rounded bg-dark-25 max-w-[20rem] w-full">
         <h1 className="text-2xl font-medium text-center text-white">Chan</h1>
         {Object.values(providers).map((provider) => (

@@ -18,7 +18,7 @@ const ImageModal = ({
       onClick={handleClose}
     >
       <section
-        className=" max-w-4xl w-full mx-auto h-[80vh] bg-gray-400 overflow-hidden rounded-lg cursor-grab"
+        className=" max-w-4xl w-full  h-max lg:h-[80vh] bg-gray-400 overflow-hidden rounded-lg cursor-grab mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <swiper-container
@@ -30,7 +30,7 @@ const ImageModal = ({
             <swiper-slide key={`${index}-${image.name}`}>
               <img
                 src={image.url}
-                className="object-contain w-full h-[80vh] block "
+                className="object-contain w-full h-max lg:h-[80vh] block "
               />
             </swiper-slide>
           ))}

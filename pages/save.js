@@ -23,7 +23,7 @@ export default function Save({ posts }) {
 
   return (
     <Layout>
-      <h2 className="sticky py-4 text-3xl font-medium text-center text-white bg-dark-100">
+      <h2 className="sticky py-4 text-2xl font-medium text-center text-white lg:text-3xl bg-dark-100">
         Saved
       </h2>
       {filteredPosts.length > 0 ? (

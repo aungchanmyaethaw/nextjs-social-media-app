@@ -219,9 +219,11 @@ const PostCard = ({
     return (
       <article className="w-full p-4 h-[10rem] rounded-lg bg-dark-25">
         <div className="flex flex-col items-center justify-center h-full gap-4 ">
-          <h2 className="text-2xl font-thin text-white">Post hide</h2>
+          <h2 className="text-xl font-thin text-white lg:text-2xl">
+            Post hide
+          </h2>
           <button
-            className="flex items-center gap-2 px-4 py-2 text-lg text-white rounded w-max bg-dark-50 hover:text-primary hover:bg-dark-50"
+            className="flex items-center gap-2 px-4 py-2 text-white rounded lg:text-lg w-max bg-dark-50 hover:text-primary hover:bg-dark-50"
             onClick={handleRemoveHidePost}
           >
             Unhide Post
@@ -241,7 +243,10 @@ const PostCard = ({
             className="block w-10 h-10 rounded-full pointer-events-none"
           />
           <div className="space-y-1">
-            <Link href={`/profile/${post.author.id}`} className="text-white ">
+            <Link
+              href={`/profile/${post.author.id}`}
+              className="text-sm text-white md:text-base"
+            >
               {post?.author?.username || post?.author?.name}
             </Link>
             <div className="flex items-center gap-1">
@@ -336,6 +341,7 @@ const PostCard = ({
               setImageModalStatus={setImageModalStatus}
               setModalImages={setModalImages}
               setModalStart={setModalStart}
+              optionsStatus={optionsStatus}
             />
           }
         </div>

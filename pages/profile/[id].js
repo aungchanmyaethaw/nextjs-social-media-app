@@ -13,6 +13,7 @@ import {
 import PostContainer from "@/components/PostContainer";
 import ProfileEditModal from "@/components/ProfileEditModal";
 import Link from "next/link";
+import MobileNavbar from "@/components/MobileNavbar";
 
 export default function Profile({ posts, session, user }) {
   const [profileModalStatus, setProfileModalStatus] = useState(false);
@@ -40,9 +41,9 @@ export default function Profile({ posts, session, user }) {
   }, [profileModalStatus]);
 
   return (
-    <main className="w-full h-full min-h-screen bg-dark-100">
-      <div className="flex items-start justify-between max-w-6xl gap-4 p-4 mx-auto pt-[80px]">
-        <aside className="sticky flex flex-col items-center gap-2 p-4 basis-1/3 top-[96px] bg-dark-25 rounded-lg">
+    <main className="w-full h-full min-h-screen pb-20 bg-dark-100">
+      <div className="flex flex-col md:flex-row items-center md:items-start justify-between max-w-6xl gap-4 p-4 mx-auto pt-[40px]">
+        <aside className="md:sticky flex flex-col items-center gap-2 p-4 basis-1/3 top-[96px] bg-dark-25 rounded-lg">
           <button
             className="flex items-center self-start gap-2 mb-4 text-xl font-bold text-white hover:text-primary"
             onClick={handleBack}
@@ -94,6 +95,7 @@ export default function Profile({ posts, session, user }) {
             session={session}
           />
         ) : null}
+        <MobileNavbar />
       </div>
     </main>
   );

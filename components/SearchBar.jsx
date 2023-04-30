@@ -9,7 +9,7 @@ const SearchBar = () => {
   const { data, isLoading } = useGetUsers(query || "");
 
   return (
-    <div className="flex items-center gap-4 px-4 py-2 rounded-full bg-dark-75 focus-within:border-primary w-[15rem] relative">
+    <div className="  flex items-center gap-4 px-4 py-2 rounded-full bg-dark-75 focus-within:border-primary w-full md:w-[15rem] relative ">
       <BsSearch className="text-primary text-bold shrink-0" size="18" />
       <input
         type="text"

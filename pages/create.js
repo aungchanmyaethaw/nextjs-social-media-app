@@ -67,7 +67,7 @@ export default function Create({ session }) {
           className="flex flex-col gap-8"
           encType="multipart/form-data"
         >
-          <div className="flex flex-col gap-4 text-white  w-full h-[23rem] relative  overflow-hidden">
+          <div className="flex flex-col gap-4 text-white  w-full h-[15rem] md:h-[20rem] lg:h-[23rem] relative  overflow-hidden">
             <div>
               <label
                 htmlFor="images"

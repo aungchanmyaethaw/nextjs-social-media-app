@@ -49,7 +49,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
       onClick={() => setProfileModalStatus(false)}
     >
       <section
-        className="relative max-w-2xl mx-auto w-full h-[80vh] bg-dark-25 overflow-hidden rounded-lg "
+        className="relative mx-4 md:max-w-2xl  w-full h-[80vh] bg-dark-25 overflow-hidden rounded-lg "
         onClick={(e) => e.stopPropagation()}
       >
         <form
@@ -67,7 +67,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
           />
           <label
             htmlFor="image"
-            className="mt-4  flex items-center gap-2 px-6 py-2 mx-auto  rounded bg-primary hover:bg-yellow-300 !text-dark-100 font-semibold"
+            className="mt-4  flex items-center gap-2 px-6 py-2 mx-auto text-sm md:text-base mb-4  rounded bg-primary hover:bg-yellow-300 !text-dark-100 font-semibold"
           >
             Choose Image
           </label>
@@ -80,7 +80,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
             className="hidden"
           />
 
-          <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
+          <div className="flex flex-col gap-2 text-white w-full md:w-[30rem] mb-6 px-4">
             <label htmlFor="username">Username</label>
             <input
               id="username"
@@ -95,7 +95,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
               <p className="text-red-400">Please add username</p>
             ) : null}
           </div>
-          <div className="flex flex-col gap-2 text-white w-[30rem] mb-6">
+          <div className="flex flex-col gap-2 text-white w-full md:w-[30rem] mb-6 px-4">
             <label htmlFor="name">Name</label>
             <input
               id="name"
@@ -105,7 +105,7 @@ const ProfileEditModal = ({ setProfileModalStatus, session, refreshData }) => {
               readOnly
             />
           </div>
-          <div className="flex flex-col gap-2 text-white w-[30rem] ">
+          <div className="flex flex-col gap-2 text-white w-full md:w-[30rem] px-4">
             <label htmlFor="email">Email</label>
             <input
               id="email"

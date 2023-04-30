@@ -5,6 +5,7 @@ import CommentCard from "./CommentCard";
 import { useSession } from "next-auth/react";
 import { useAddComment, useGetComments } from "@/hooks/useComment";
 import { TbMessageCircleOff } from "react-icons/tb";
+import { ClipLoader } from "react-spinners";
 const CommentModal = ({ setCommentModalStatus, commentPostId }) => {
   const { register, handleSubmit, reset } = useForm();
   const { data: session } = useSession();
@@ -28,7 +29,7 @@ const CommentModal = ({ setCommentModalStatus, commentPostId }) => {
       onClick={() => setCommentModalStatus(false)}
     >
       <section
-        className="relative max-w-2xl mx-auto w-full h-[80vh] bg-dark-25 overflow-hidden rounded-lg "
+        className="relative max-w-2xl  w-full h-[50vh]  md:h-[80vh] bg-dark-25 overflow-hidden rounded-lg mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* comment container */}
@@ -101,8 +102,15 @@ const CommentModal = ({ setCommentModalStatus, commentPostId }) => {
               placeholder="Enter a comment ..."
               rows={3}
             />
-            <button className="self-end text-2xl text-primary hover:opacity-75">
-              <MdSend />
+            <button
+              className="self-end text-2xl text-primary hover:opacity-75"
+              disabled={useAddCommentMutation.isLoading}
+            >
+              {useAddCommentMutation.isLoading ? (
+                <ClipLoader color="white" size={16} />
+              ) : (
+                <MdSend />
+              )}
             </button>
           </div>
         </form>

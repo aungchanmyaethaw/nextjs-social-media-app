@@ -4,6 +4,8 @@ import { BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
 import { useDeleteComment, useEditComment } from "@/hooks/useComment";
 import { getCurrentDate } from "@/utils/getCurrentDate";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
+import { ClipLoader } from "react-spinners";
 const CommentCard = ({ comment, refetch }) => {
   const { data: session } = useSession();
   const [deleteStatus, setDeleteStatus] = useState(false);
@@ -48,7 +50,12 @@ const CommentCard = ({ comment, refetch }) => {
       />
       <div className="px-4 py-2 overflow-hidden bg-gray-400 bg-opacity-25 rounded-lg w-max">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-white">{comment.user.name}</span>
+          <Link
+            href={`/profile/${comment.user.id}`}
+            className="text-sm font-medium text-white md:text-base"
+          >
+            {comment.user.name}
+          </Link>
           <span className="text-xs text-gray-200">
             {getCurrentDate(comment.updatedAt)}
           </span>
@@ -64,8 +71,15 @@ const CommentCard = ({ comment, refetch }) => {
                 rows={3}
                 cols={50}
               />
-              <button className="self-end text-2xl text-primary hover:opacity-75">
-                <BsPencilSquare />
+              <button
+                className="self-end text-2xl text-primary hover:opacity-75"
+                disabled={useEditMutation.isLoading}
+              >
+                {useEditMutation.isLoading ? (
+                  <ClipLoader size={16} color="white" />
+                ) : (
+                  <BsPencilSquare />
+                )}
               </button>
             </div>
           </form>
@@ -112,8 +126,17 @@ const CommentCard = ({ comment, refetch }) => {
                 className="flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded hover:bg-red-600"
                 onClick={handleDelete}
               >
-                <BsFillTrashFill size={12} />
-                Delete
+                {useDeleteMutation.isLoading ? (
+                  <>
+                    <ClipLoader size={12} color="white" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <BsFillTrashFill size={12} />
+                    Delete
+                  </>
+                )}
               </button>
               <button
                 className="flex items-center px-2 py-1 text-xs font-bold bg-gray-400 rounded hover:bg-gray-500 text-dark-100"

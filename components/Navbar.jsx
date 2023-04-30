@@ -19,10 +19,6 @@ export default function Navbar() {
 
   const router = useRouter();
 
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
-
   useEffect(() => {
     const event = document.addEventListener("click", (e) => {
       if (e.target !== profileRef.current) {
@@ -35,13 +31,13 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between py-8 border-b bg-dark-100 ">
-      <div className="flex items-baseline gap-8">
+      <div className="flex items-baseline w-full gap-8 lg:w-max lg:justify-start md:justify-between">
         <Link href="/" className="text-2xl font-medium text-white">
           Chan
         </Link>
         <SearchBar />
       </div>
-      <nav className="absolute flex items-center gap-8 text-white -translate-x-1/2 left-1/2 ">
+      <nav className="absolute items-center hidden gap-8 text-white -translate-x-1/2 lg:flex left-1/2">
         <CustomLink to="/">
           <BsHouse size={22} />
         </CustomLink>
@@ -53,21 +49,33 @@ export default function Navbar() {
         </CustomLink>
       </nav>
       <div
-        className="flex items-center gap-4 cursor-pointer"
+        className="items-center hidden gap-4 cursor-pointer lg:flex"
         ref={profileRef}
         onClick={() => setDropDownStatus(true)}
       >
-        <img
-          src={session?.user?.image}
-          alt={"profile"}
-          className="w-8 h-8 rounded-full pointer-events-none "
-        />
-        <span className="text-white pointer-events-none">
-          {session?.user?.username || session?.user?.name}
-        </span>
+        {session?.user?.image ? (
+          <img
+            src={session?.user?.image}
+            alt={"profile"}
+            className="w-8 h-8 rounded-full pointer-events-none "
+          />
+        ) : (
+          <img
+            src="/profile.png"
+            className="w-8 h-8 rounded-full pointer-events-none "
+          />
+        )}
+
+        {session?.user?.username || session?.user?.name ? (
+          <span className="text-white pointer-events-none">
+            {session?.user?.username || session?.user?.name}
+          </span>
+        ) : (
+          <span className="w-[5rem] h-3 bg-gray-400 bg-opacity-25 block" />
+        )}
       </div>
       {dropDownStatus ? (
-        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[12rem] w-full bg-dark-25 p-4 z-50 space-y-2">
+        <div className="absolute right-0 top-20 rounded-lg bg-card max-w-[12rem] w-full bg-dark-25 p-4 z-50 space-y-2 hidden lg:block">
           <Link href={`/profile/${session?.user.id}`} className="block">
             <button className="flex items-center justify-center w-full gap-2 py-2 font-semibold text-white bg-dark-50 hover:bg-dark-75 hover:text-primary">
               <BsPerson size={18} />

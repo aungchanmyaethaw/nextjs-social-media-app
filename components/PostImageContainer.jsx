@@ -7,6 +7,7 @@ export default function PostImageContainer({
   setImageModalStatus,
   setModalImages,
   setModalStart,
+  optionsStatus,
 }) {
   const handleOpenModal = (index) => {
     setImageModalStatus(true);
@@ -15,7 +16,11 @@ export default function PostImageContainer({
   };
 
   return (
-    <section className="w-full h-[30rem]   overflow-hidden rounded-lg cursor-grab">
+    <section
+      className={`w-full h-[30rem]   overflow-hidden rounded-lg ${
+        optionsStatus ? "pointer-events-none" : null
+      }`}
+    >
       <swiper-container slides-per-view="auto" navigation="true">
         {Array.from(images).map((image, index) => (
           <swiper-slide key={`${index}-${image.name}`}>
