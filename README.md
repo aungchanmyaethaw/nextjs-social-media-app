@@ -39,11 +39,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### Env
 
-DATABASE_URL=your database URL
-GOOGLE_CLIENT_ID=your google client id
-GOOGLE_CLIENT_SECRET=your google client secret
-NEXTAUTH_URL=your nextauth URL
-JWT_SECRET = 32 random characters
-CLOUDINARY_NAME=your cloudinary name
-CLOUDINARY_KEY=your cloudinary key
-CLOUDINARY_SECRET=your cloudinary secret
+-DATABASE_URL=your database URL
+-GOOGLE_CLIENT_ID=your google client id
+-GOOGLE_CLIENT_SECRET=your google client secret
+-NEXTAUTH_URL=your nextauth URL
+-JWT_SECRET = 32 random characters
+-CLOUDINARY_NAME=your cloudinary name
+-CLOUDINARY_KEY=your cloudinary key
+-CLOUDINARY_SECRET=your cloudinary secret
