@@ -36,3 +36,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+### Env
+
+DATABASE_URL=your database URL
+GOOGLE_CLIENT_ID=your google client id
+GOOGLE_CLIENT_SECRET=your google client secret
+NEXTAUTH_URL=your nextauth URL
+JWT_SECRET = 32 random characters
+CLOUDINARY_NAME=your cloudinary name
+CLOUDINARY_KEY=your cloudinary key
+CLOUDINARY_SECRET=your cloudinary secret
